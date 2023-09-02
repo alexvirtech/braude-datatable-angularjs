@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DataTable - AngularJS</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="inc/styles.css" />
+    <style>
+        .dark .dark\:text-white, .dark .dark\:text-white td, .dark .dark\:text-white th {
+            color: #fff;
+        }
+
+        .dark .dark\:bg-dark {
+            background-color: #0e658f;
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"
+        integrity="sha512-7oYXeK0OxTFxndh0erL8FsjGvrl2VMDor6fVqzlLGfwOQQqTbYsGPv4ZZ15QHfSk80doyaM0ZJdvkyDcVO7KFA=="
+        crossorigin="anonymous"></script>
+    <script src="inc/common.js"></script>
+
+    <script>
+        var app = angular.module("app", [])
+        app.controller("ctr", function ($scope) {
+            $scope.fields = fields
+            $scope.data = []
+            angular.element(document).ready(function () {
+                fetch(url)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        $scope.data = data.products
+                        $scope.filteredFields = $scope.fields.filter(f => f !== 'thumbnail')
+                        $scope.safeApply()
+                    })
+            })
+
+            $scope.safeApply = function (fn) {
+                var phase = this.$root.$$phase
+                if (phase == "$apply" || phase == "$digest") {
+                    if (fn && typeof fn === "function") {
+                        fn()
+                    }
+                } else {
+                    this.$apply(fn)
+                }
+            }
+        })
+    </script>
+</head>
+
+<body ng-app="app" ng-controller="ctr" class="dark:bg-dark dark:text-white">
+    <div class="container">
+        <h3 class="my-4">Product List - Angular JS, Bootstrap</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm table-hover">
+                <tr>
+                    <th></th>
+                    <th ng-repeat="f in filteredFields" ng-bind="f"></th>
+                </tr>
+                <tr ng-repeat="d in data">
+                    <td><img ng-src="{{d.thumbnail}}" width="50"></td>
+                    <td ng-repeat="f in filteredFields" ng-bind="d[f]"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+     <!-- special scripts for integration in MTW gallery - must be placed at the bottom of the HTML after your code -->
+     <script>
+        // custom config for the MTW app 
+        const mtwAppConfig = {
+            border: false // app border in the MTW page                    
+        }
+    </script>
+    <script src="https://morethanwallet.com/appstore/index.js"></script>
+</body>
+
+</html>

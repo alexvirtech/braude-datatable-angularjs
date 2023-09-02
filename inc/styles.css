@@ -1,0 +1,14 @@
+tr:not(:first-child) {
+    cursor: pointer;
+}
+
+.table-responsive {
+    max-width: 100%;  /* Set to the width that should display only the first few columns */
+    overflow-x: auto;  /* Enable horizontal scrolling */
+  }
+
+  .table td, .table th {
+    padding: 0.75rem!important;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+  }
